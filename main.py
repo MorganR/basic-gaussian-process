@@ -72,7 +72,7 @@ if __name__ == "__main__":
 
     plt.plot(x_data, y_data, 'o')
     plt.plot(x_test, mean)
-    plt.fill_between(x_test, mean_minus_variance, mean_plus_variance)
+    plt.fill_between(x_test, mean_minus_variance, mean_plus_variance, color='grey')
     plt.show()
 
 
