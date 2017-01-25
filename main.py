@@ -28,9 +28,9 @@ def solve_posterior(x_data, y_data, cov_matrix, sigma, test_data):
     K_X_star = tf.exp(tf.scalar_mul(-0.5,
         tf.squared_difference(X_star_cols, X_star_rows)/length_scale))
     variance = K_star_star - tf.matmul(K_star_X, tf.cholesky_solve(cholesky_decomp, K_X_star))
-    log_marg_likelihood = -0.5*tf.transpose(y_data)*alpha \
+    log_marg_likelihood = -0.5*tf.matmul(tf.transpose(y_data),alpha) \
         - tf.reduce_sum(tf.log(tf.diag_part(cholesky_decomp))) \
-        - (x_data.size / 2) * math.log(math.pi)
+        - (tf.size(x_data) / 2) * math.log(math.pi)
     return mean, variance, log_marg_likelihood
 
 if __name__ == "__main__":
@@ -59,11 +59,12 @@ if __name__ == "__main__":
     
     plt.show()
 
-    x_test = np.linspace(-math.pi - 0.5, math.pi + 0.5, 100)
+    x_test = np.linspace(-math.pi, math.pi, 100)
 
-    mean, variance, log_marg_likelihood = sess.run(solve_posterior(x_data, 
+    mean, variance, log_marg_likelihood = sess.run(solve_posterior(tf.reshape(x_data, [x_data.size, 1]), 
         tf.reshape(y_data, [y_data.size, 1]), covariance_est, 0.1, x_test))
     mean = mean.flatten()
+    print('Log marginal likelihood: ', log_marg_likelihood)
 
     variance_diag = np.diagonal(variance)
 
