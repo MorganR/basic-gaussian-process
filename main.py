@@ -35,7 +35,9 @@ def solve_posterior(x_data, y_data, cov_matrix, sigma, test_data):
 
 if __name__ == "__main__":
     # generate sample data
-    x_data = np.random.rand(10) * 2 * math.pi - math.pi
+    x_min = 0.001
+    x_max = 2*math.pi
+    x_data = np.random.rand(10) * (x_max - x_min) - (x_max + x_min)/2
     x_data = np.sort(x_data)
     y_data = np.sin(x_data) + np.random.normal(0.0, 0.1, x_data.size)
 
@@ -43,9 +45,10 @@ if __name__ == "__main__":
     length_scale = 1
     # Use squared exponential covariance matrix
     # Covariance defined as $exp(-0.5*(x_i-x_j)^2/l^2)$ where l is the length-scale
-    x_rows, x_cols = np.meshgrid(x_data, x_data)
+    x_test = np.linspace(x_min, x_max, 100)
+    x_cols, x_rows = np.meshgrid(x_test, x_test)
     covariance_est = np.exp((-0.5 * (x_cols - x_rows)**2)/length_scale**2)
-
+    
     plt.imshow(covariance_est)
     plt.colorbar()
     plt.show()
@@ -55,9 +58,9 @@ if __name__ == "__main__":
     while num_samples < 5:
         prior_sample = generate_sample(mean_est, covariance_est)
         plt.plot(x_data, prior_sample)
-        plt.title('Prior Samples')
         num_samples = num_samples + 1
 
+    plt.title('Prior Samples')
     plt.show()
 
     x_test = np.linspace(-math.pi, math.pi, 100)
