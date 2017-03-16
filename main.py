@@ -70,7 +70,6 @@ if __name__ == "__main__":
     x_max = math.pi
     x_data = np.random.rand(10) * (x_max - x_min) - (x_max - x_min)/2
     x_data = np.sort(x_data)
-    # y_data = np.sin(x_data) + np.random.normal(0.0, 0.1, x_data.size)
     y_data = np.random.normal(loc=0.0, scale=1.0, size=x_data.size)
 
     mean_est = 0.0
