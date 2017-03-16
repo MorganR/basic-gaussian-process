@@ -35,7 +35,9 @@ def solve_posterior(x_data, y_data, cov_matrix, sigma, test_data):
 
 if __name__ == "__main__":
     # generate sample data
-    x_data = np.random.rand(10) * 2 * math.pi - math.pi
+    x_min = -math.pi
+    x_max = math.pi
+    x_data = np.random.rand(10) * (x_max - x_min) - (x_max - x_min)/2
     x_data = np.sort(x_data)
     y_data = np.sin(x_data) + np.random.normal(0.0, 0.1, x_data.size)
 
@@ -59,7 +61,7 @@ if __name__ == "__main__":
     
     plt.show()
 
-    x_test = np.linspace(-math.pi, math.pi, 100)
+    x_test = np.linspace(x_min, x_max, 100)
 
     mean, variance, log_marg_likelihood = sess.run(solve_posterior(tf.reshape(x_data, [x_data.size, 1]), 
         tf.reshape(y_data, [y_data.size, 1]), covariance_est, 0.1, x_test))
