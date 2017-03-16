@@ -8,14 +8,13 @@ def generate_sample(mean, cov_matrix):
     '''generate_sample: Generate sample function output from a mean and covariance matrix.'''
     cholesky_decomp = linalg.cholesky(cov_matrix)
     cov_shape = cov_matrix.shape
-    result_shape = (cov_shape[0], 1)
-    uniform_gaussian_distribution = np.random.normal(loc=0.0, scale=1.0, size=result_shape)
+    uniform_gaussian_distribution = np.random.normal(loc=0.0, scale=1.0, size=cov_shape[0])
     return mean + np.matmul(cholesky_decomp, uniform_gaussian_distribution)
 
 def solve_posterior(x_data, y_data, cov_matrix, sigma, test_data):
     '''solve_posterior: Generate the mean, variance and log marginal likelihood from
     sample data.'''
-    cholesky_decomp = linalg.cholesky(cov_matrix + math.pow(sigma, 2)*np.eye(cov_matrix.shape[0]))
+    cholesky_decomp = linalg.cho_factor(cov_matrix + (sigma**2)*np.eye(cov_matrix.shape[0]))
     alpha = linalg.cho_solve(cholesky_decomp, y_data)
     star_X_rows, star_X_cols = np.meshgrid(x_data, test_data)
     K_star_X = np.exp(-0.5*
@@ -29,7 +28,7 @@ def solve_posterior(x_data, y_data, cov_matrix, sigma, test_data):
         (X_star_cols-X_star_rows)**2/length_scale**2)
     variance = K_star_star - np.matmul(K_star_X, linalg.cho_solve(cholesky_decomp, K_X_star))
     log_marg_likelihood = -0.5*np.matmul(y_data.T,alpha) \
-        - np.sum(np.log(np.diagonal(cholesky_decomp))) \
+        - np.sum(np.log(np.diagonal(cholesky_decomp[0]))) \
         - (x_data.size / 2) * math.log(math.pi)
     return mean, variance, log_marg_likelihood
 
@@ -64,8 +63,8 @@ if __name__ == "__main__":
 
     x_test = np.linspace(x_min, x_max, 100)
 
-    mean, variance, log_marg_likelihood = solve_posterior(np.reshape(x_data, (x_data.size, 1)),
-        np.reshape(y_data, (y_data.size, 1)), covariance_est, 0.1, x_test)
+    mean, variance, log_marg_likelihood = solve_posterior(x_data,
+        y_data, covariance_est, 0.1, x_test)
     mean = mean.flatten()
     print('Log marginal likelihood: ', log_marg_likelihood)
 
