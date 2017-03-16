@@ -45,8 +45,7 @@ if __name__ == "__main__":
     length_scale = 1
     # Use squared exponential covariance matrix
     # Covariance defined as $exp(-0.5*(x_i-x_j)^2/l^2)$ where l is the length-scale
-    x_test = np.linspace(x_min, x_max, 100)
-    x_cols, x_rows = np.meshgrid(x_test, x_test)
+    x_cols, x_rows = np.meshgrid(x_data, x_data)
     covariance_est = np.exp((-0.5 * (x_cols - x_rows)**2)/length_scale**2)
     
     plt.imshow(covariance_est)
