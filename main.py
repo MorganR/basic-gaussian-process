@@ -104,4 +104,3 @@ if __name__ == "__main__":
     perform_regression(x_data, y_data, x_min, x_max, mean_est, 0.5)
     perform_regression(x_data, y_data, x_min, x_max, mean_est, 1.5)
     
-    
