@@ -2,7 +2,6 @@ import math
 import numpy as np
 import scipy.linalg as linalg
 import matplotlib.pyplot as plt
-import tensorflow as tf
 
 def generate_sample(mean, cov_matrix):
     '''generate_sample: Generate sample function output from a mean and covariance matrix.'''
